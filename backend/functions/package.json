@@ -8,7 +8,7 @@
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log",
-    "emulate": "firebase --project='pathways-amy-dev' emulators:start"
+    "emulate": "firebase --project='pathways-amy-andrzej' emulators:start"
   },
   "engines": {
     "node": "12"

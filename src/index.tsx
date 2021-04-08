@@ -13,21 +13,21 @@ import reportWebVitals from "./reportWebVitals";
 Amy.initialize();
 
 const firebaseConfig = {
-  apiKey: '',
-  authDomain: '',
-  projectId: 'pathways-amy-dev',
-  storageBucket: '',
-  messagingSenderId: '',
-  appId: '',
-  // measurementId: '', // probably not mandatory
-}
+  apiKey: "AIzaSyBmwbfh4JszSLWd6-DQ5qW0_Wyjk_v0JCc",
+  authDomain: "pathways-amy-andrzej.firebaseapp.com",
+  projectId: "pathways-amy-andrzej",
+  storageBucket: "pathways-amy-andrzej.appspot.com",
+  messagingSenderId: "530998535248",
+  appId: "1:530998535248:web:e4c2cc5dc477972c82dd55",
+  measurementId: "G-RZGZJ66D6D"
+};
 
 
-const pathwaysApp = firebase.initializeApp(firebaseConfig, 'pathways');
-const auth = firebase.auth(pathwaysApp);
+const pathwaysAmyApp = firebase.initializeApp(firebaseConfig, 'pathways-amy');
+const auth = firebase.auth(pathwaysAmyApp);
 
 if (window.location.hostname === 'localhost') {
-  pathwaysApp
+  pathwaysAmyApp
     .functions('northamerica-northeast1')
     .useEmulator('localhost', 5001)
   auth.useEmulator('http://localhost:9099/')
