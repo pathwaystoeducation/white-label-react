@@ -4,12 +4,34 @@ import { Button, CssBaseline, TextField } from "@material-ui/core";
 import "firebase/auth";
 import "firebase/database";
 import "firebase/firestore";
+import firebase from "firebase";
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 
 Amy.initialize();
+
+const firebaseConfig = {
+  apiKey: '',
+  authDomain: '',
+  projectId: 'pathways-amy-dev',
+  storageBucket: '',
+  messagingSenderId: '',
+  appId: '',
+  // measurementId: '', // probably not mandatory
+}
+
+
+const pathwaysApp = firebase.initializeApp(firebaseConfig, 'pathways');
+const auth = firebase.auth(pathwaysApp);
+
+if (window.location.hostname === 'localhost') {
+  pathwaysApp
+    .functions('northamerica-northeast1')
+    .useEmulator('localhost', 5001)
+  auth.useEmulator('http://localhost:9099/')
+}
 
 const theme = createAmyTheme({
     palette: {
@@ -50,6 +72,7 @@ const theme = createAmyTheme({
         },
     },
 });
+
 ReactDOM.render(
     <React.StrictMode>
         <CssBaseline />
@@ -62,26 +85,39 @@ ReactDOM.render(
     document.getElementById("root"),
 );
 
+
+
 function AuthSpace() {
-    const [token, setToken] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
+    // debugger;
 
     return (
         <>
             <TextField
-                value={token}
+                value={email}
                 onChange={(e) => {
-                    setToken(e.target.value);
+                    setEmail(e.target.value);
+                }}
+            />
+            <TextField
+                value={password}
+                onChange={(e) => {
+                    setPassword(e.target.value);
                 }}
             />
             <Button
                 variant="outlined"
                 color="primary"
-                disabled={!token}
-                onClick={() => {
+                disabled={!email || !password}
+                onClick={async () => {
+                  const result = await auth.signInWithEmailAndPassword(email, password);
+                  console.log(result);
                     // sign in
-                    Amy.get().signInViaToken({ token }).then(() => {
-                        console.log("Amy is logged in. Wait for the magic to happen!");
-                    });
+                    // Amy.get().signInViaToken({ token }).then(() => {
+                    //     console.log("Amy is logged in. Wait for the magic to happen!");
+                    // });
                 }}
             >
                 Login
@@ -89,6 +125,10 @@ function AuthSpace() {
         </>
     );
 }
+
+// login
+//// create user
+// both go through our own server ? create should be fairly easy - creates user in firebase auth of theirs
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
