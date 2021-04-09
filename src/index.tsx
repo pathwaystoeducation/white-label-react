@@ -125,7 +125,6 @@ function AuthSpace() {
                     return;
                   }
                   try {
-                    debugger;
                     await Amy.get().signInViaToken({ token });
                     console.log("Amy is logged in. Wait for the magic to happen!");
                   }
@@ -139,10 +138,6 @@ function AuthSpace() {
         </>
     );
 }
-
-// login
-//// create user
-// both go through our own server ? create should be fairly easy - creates user in firebase auth of theirs
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
