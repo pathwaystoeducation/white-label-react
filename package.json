@@ -44,7 +44,8 @@
         "shx": "latest"
     },
     "scripts": {
-        "start": "tsc -b && react-scripts start",
+        "start": "HTTPS=true tsc -b && react-scripts start",
+        "https-start": "HTTPS=true npm start",
         "build": "tsc -b && react-scripts build",
         "test": "jest",
         "eject": "react-scripts eject",

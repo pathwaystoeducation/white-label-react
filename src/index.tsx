@@ -91,18 +91,18 @@ function AuthSpace() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    // debugger;
-
     return (
         <>
             <TextField
                 value={email}
+                placeholder="email"
                 onChange={(e) => {
                     setEmail(e.target.value);
                 }}
             />
             <TextField
                 value={password}
+                placeholder="password"
                 onChange={(e) => {
                     setPassword(e.target.value);
                 }}
@@ -112,12 +112,26 @@ function AuthSpace() {
                 color="primary"
                 disabled={!email || !password}
                 onClick={async () => {
-                  const result = await auth.signInWithEmailAndPassword(email, password);
-                  console.log(result);
-                    // sign in
-                    // Amy.get().signInViaToken({ token }).then(() => {
-                    //     console.log("Amy is logged in. Wait for the magic to happen!");
-                    // });
+                  let token;
+                  try {
+                    await auth.signInWithEmailAndPassword(email, password);
+                    const { data } = await pathwaysAmyApp
+                      .functions('northamerica-northeast1')
+                      .httpsCallable('getAmyToken')();
+                    token = data.token;
+                  }
+                  catch (error) {
+                    alert(error.message);
+                    return;
+                  }
+                  try {
+                    debugger;
+                    await Amy.get().signInViaToken({ token });
+                    console.log("Amy is logged in. Wait for the magic to happen!");
+                  }
+                  catch(error) {
+                    alert(`Amy sign in error: ${error.message}`);
+                  }
                 }}
             >
                 Login
