@@ -1,6 +1,7 @@
 const functions = require('firebase-functions');
 const fetch = require('node-fetch');
 
+// Set in firebase using `firebase functions:config:set amy.x-api-key="****"`
 const xApiKey = functions.config().amy['x-api-key'];
 
 async function createUser(userId, email) {

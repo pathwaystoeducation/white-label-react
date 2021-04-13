@@ -13,13 +13,13 @@ import reportWebVitals from "./reportWebVitals";
 Amy.initialize();
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBmwbfh4JszSLWd6-DQ5qW0_Wyjk_v0JCc",
-  authDomain: "pathways-amy-andrzej.firebaseapp.com",
-  projectId: "pathways-amy-andrzej",
-  storageBucket: "pathways-amy-andrzej.appspot.com",
-  messagingSenderId: "530998535248",
-  appId: "1:530998535248:web:e4c2cc5dc477972c82dd55",
-  measurementId: "G-RZGZJ66D6D"
+  apiKey: "AIzaSyAZ1chyFHO2_yCc4ESXA4vjUuM_66KfMlg",
+  authDomain: "pathways-amy.firebaseapp.com",
+  projectId: "pathways-amy",
+  storageBucket: "pathways-amy.appspot.com",
+  messagingSenderId: "595540530021",
+  appId: "1:595540530021:web:8d999fa24b3235e058078c",
+  measurementId: "G-JWGE4WX1QN"
 };
 
 
