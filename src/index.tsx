@@ -46,10 +46,10 @@ if (window.location.hostname === 'localhost') {
 const theme = createAmyTheme({
     palette: {
         primary: {
-            main: "#f8f8f8",
+            main: "#002566",
         },
         secondary: {
-            main: "#007934",
+            main: "#808080",
         },
     },
     shape: {
