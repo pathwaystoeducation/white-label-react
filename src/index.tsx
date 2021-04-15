@@ -1,6 +1,7 @@
 import { Amy } from "@amy-app/js-sdk";
 import { AppPage, createAmyTheme } from "@amy-app/react-components";
 import { Button, CssBaseline, TextField } from "@material-ui/core";
+import { makeStyles } from '@material-ui/core/styles';
 import "firebase/auth";
 import "firebase/database";
 import "firebase/firestore";
@@ -9,6 +10,15 @@ import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
+
+const useStyles = makeStyles((theme) => ({
+  paper: {
+    display: 'flex',
+    flexDirection: 'column',
+    height: '118px',
+    justifyContent: 'space-around',
+  },
+}));
 
 Amy.initialize();
 
@@ -36,10 +46,10 @@ if (window.location.hostname === 'localhost') {
 const theme = createAmyTheme({
     palette: {
         primary: {
-            main: "#002566",
+            main: "#f8f8f8",
         },
         secondary: {
-            main: "#808080",
+            main: "#007934",
         },
     },
     shape: {
@@ -77,8 +87,8 @@ ReactDOM.render(
     <React.StrictMode>
         <CssBaseline />
         <AppPage
-            logoSrc={"/logo512.png"}
-            login={<AuthSpace />}
+            logoSrc={"/logo.png"}
+            login={<AuthSpace/>}
             theme={theme}
         />
     </React.StrictMode>,
@@ -91,8 +101,10 @@ function AuthSpace() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
+    const classes = useStyles();
+
     return (
-        <>
+        <div className={classes.paper}>
             <TextField
                 value={email}
                 placeholder="email"
@@ -108,8 +120,9 @@ function AuthSpace() {
                 }}
             />
             <Button
-                variant="outlined"
+                variant="contained"
                 color="primary"
+                type="submit"
                 disabled={!email || !password}
                 onClick={async () => {
                   let token;
@@ -135,7 +148,7 @@ function AuthSpace() {
             >
                 Login
             </Button>
-        </>
+        </div>
     );
 }
 
