@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     display: 'flex',
     flexDirection: 'column',
-    height: '118px',
+    height: '158px',
     justifyContent: 'space-around',
   },
 }));
@@ -147,26 +147,8 @@ function AuthSpace() {
                 color="primary"
                 type="submit"
                 disabled={!email || !password}
-                onClick={async () => {
-                  let token;
-                  try {
-                    await auth.signInWithEmailAndPassword(email, password);
-                    const { data } = await pathwaysAmyApp
-                      .functions('northamerica-northeast1')
-                      .httpsCallable('getAmyToken')();
-                    token = data.token;
-                  }
-                  catch (error) {
-                    alert(error.message);
-                    return;
-                  }
-                  try {
-                    await Amy.get().signInViaToken({ token });
-                    console.log("Amy is logged in. Wait for the magic to happen!");
-                  }
-                  catch(error) {
-                    alert(`Amy sign in error: ${error.message}`);
-                  }
+                onClick={() => {
+                  signInAndGetToken(auth.signInWithEmailAndPassword(email, password));
                 }}
             >
                 Login
@@ -176,17 +158,8 @@ function AuthSpace() {
                 variant="contained"
                 color="secondary"
                 type="button"
-                onClick={async () => {
-                  try {
-                    const { user } = await auth.signInWithPopup(provider)
-                    // The signed-in user info.
-                    console.log(user);
-                    debugger;
-                  }
-                  catch (error) {
-                    console.error(error);
-                    alert('Something went wrong, please try again.')
-                  }
+                onClick={() => {
+                  signInAndGetToken(auth.signInWithPopup(provider));
                 }}
             >
                 Google Sign In
