@@ -35,6 +35,29 @@ const firebaseConfig = {
 
 const pathwaysAmyApp = firebase.initializeApp(firebaseConfig, 'pathways-amy');
 const auth = firebase.auth(pathwaysAmyApp);
+const provider = new firebase.auth.GoogleAuthProvider();
+
+async function signInAndGetToken(signInPromise) {
+  let token;
+  try {
+    await signInPromise;
+    const { data } = await pathwaysAmyApp
+      .functions('northamerica-northeast1')
+      .httpsCallable('getAmyToken')();
+    token = data.token;
+  }
+  catch (error) {
+    alert(error.message);
+    return;
+  }
+  try {
+    await Amy.get().signInViaToken({ token });
+    console.log("Amy is logged in. Wait for the magic to happen!");
+  }
+  catch(error) {
+    alert(`Amy sign in error: ${error.message}`);
+  }
+}
 
 if (window.location.hostname === 'localhost') {
   pathwaysAmyApp
@@ -147,6 +170,26 @@ function AuthSpace() {
                 }}
             >
                 Login
+            </Button>
+
+            <Button
+                variant="contained"
+                color="secondary"
+                type="button"
+                onClick={async () => {
+                  try {
+                    const { user } = await auth.signInWithPopup(provider)
+                    // The signed-in user info.
+                    console.log(user);
+                    debugger;
+                  }
+                  catch (error) {
+                    console.error(error);
+                    alert('Something went wrong, please try again.')
+                  }
+                }}
+            >
+                Google Sign In
             </Button>
         </div>
     );
