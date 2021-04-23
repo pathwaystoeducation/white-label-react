@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     display: 'flex',
     flexDirection: 'column',
-    height: '158px',
+    height: '198px',
     justifyContent: 'space-around',
   },
 }));
@@ -35,7 +35,8 @@ const firebaseConfig = {
 
 const pathwaysAmyApp = firebase.initializeApp(firebaseConfig, 'pathways-amy');
 const auth = firebase.auth(pathwaysAmyApp);
-const provider = new firebase.auth.GoogleAuthProvider();
+const googleProvider = new firebase.auth.GoogleAuthProvider();
+const facebookProvider = new firebase.auth.FacebookAuthProvider();
 
 async function signInAndGetToken(signInPromise) {
   let token;
@@ -159,10 +160,21 @@ function AuthSpace() {
                 color="secondary"
                 type="button"
                 onClick={() => {
-                  signInAndGetToken(auth.signInWithPopup(provider));
+                  signInAndGetToken(auth.signInWithPopup(googleProvider));
                 }}
             >
                 Google Sign In
+            </Button>
+
+            <Button
+                variant="contained"
+                color="secondary"
+                type="button"
+                onClick={() => {
+                  signInAndGetToken(auth.signInWithPopup(facebookProvider));
+                }}
+            >
+                Facebook Login
             </Button>
         </div>
     );
