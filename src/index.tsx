@@ -1,15 +1,71 @@
 import { Amy } from "@amy-app/js-sdk";
 import { AppPage, createAmyTheme } from "@amy-app/react-components";
 import { Button, CssBaseline, TextField } from "@material-ui/core";
+import { makeStyles } from '@material-ui/core/styles';
 import "firebase/auth";
 import "firebase/database";
 import "firebase/firestore";
+import firebase from "firebase";
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 
+const useStyles = makeStyles((theme) => ({
+  paper: {
+    display: 'flex',
+    flexDirection: 'column',
+    height: '198px',
+    justifyContent: 'space-around',
+  },
+}));
+
 Amy.initialize();
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAZ1chyFHO2_yCc4ESXA4vjUuM_66KfMlg",
+  authDomain: "pathways-amy.firebaseapp.com",
+  projectId: "pathways-amy",
+  storageBucket: "pathways-amy.appspot.com",
+  messagingSenderId: "595540530021",
+  appId: "1:595540530021:web:8d999fa24b3235e058078c",
+  measurementId: "G-JWGE4WX1QN"
+};
+
+
+const pathwaysAmyApp = firebase.initializeApp(firebaseConfig, 'pathways-amy');
+const auth = firebase.auth(pathwaysAmyApp);
+const googleProvider = new firebase.auth.GoogleAuthProvider();
+const facebookProvider = new firebase.auth.FacebookAuthProvider();
+
+async function signInAndGetToken(signInPromise) {
+  let token;
+  try {
+    await signInPromise;
+    const { data } = await pathwaysAmyApp
+      .functions('northamerica-northeast1')
+      .httpsCallable('getAmyToken')();
+    token = data.token;
+  }
+  catch (error) {
+    alert(error.message);
+    return;
+  }
+  try {
+    await Amy.get().signInViaToken({ token });
+    console.log("Amy is logged in. Wait for the magic to happen!");
+  }
+  catch(error) {
+    alert(`Amy sign in error: ${error.message}`);
+  }
+}
+
+if (window.location.hostname === 'localhost') {
+  pathwaysAmyApp
+    .functions('northamerica-northeast1')
+    .useEmulator('localhost', 5001)
+  auth.useEmulator('http://localhost:9099/')
+}
 
 const theme = createAmyTheme({
     palette: {
@@ -50,44 +106,77 @@ const theme = createAmyTheme({
         },
     },
 });
+
 ReactDOM.render(
     <React.StrictMode>
         <CssBaseline />
         <AppPage
-            logoSrc={"/logo512.png"}
-            login={<AuthSpace />}
+            logoSrc={"/logo.png"}
+            login={<AuthSpace/>}
             theme={theme}
-            title={<img src="/logo512.png" style={{ height: "20px" }} />}
         />
     </React.StrictMode>,
     document.getElementById("root"),
 );
 
+
+
 function AuthSpace() {
-    const [token, setToken] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
+    const classes = useStyles();
 
     return (
-        <>
+        <div className={classes.paper}>
             <TextField
-                value={token}
+                value={email}
+                placeholder="email"
                 onChange={(e) => {
-                    setToken(e.target.value);
+                    setEmail(e.target.value);
+                }}
+            />
+            <TextField
+                value={password}
+                placeholder="password"
+                onChange={(e) => {
+                    setPassword(e.target.value);
                 }}
             />
             <Button
-                variant="outlined"
+                variant="contained"
                 color="primary"
-                disabled={!token}
+                type="submit"
+                disabled={!email || !password}
                 onClick={() => {
-                    // sign in
-                    Amy.signInViaToken({ token }).then(() => {
-                        console.log("Amy is logged in. Wait for the magic to happen!");
-                    });
+                  signInAndGetToken(auth.signInWithEmailAndPassword(email, password));
                 }}
             >
                 Login
             </Button>
-        </>
+
+            <Button
+                variant="contained"
+                color="secondary"
+                type="button"
+                onClick={() => {
+                  signInAndGetToken(auth.signInWithPopup(googleProvider));
+                }}
+            >
+                Google Sign In
+            </Button>
+
+            <Button
+                variant="contained"
+                color="secondary"
+                type="button"
+                onClick={() => {
+                  signInAndGetToken(auth.signInWithPopup(facebookProvider));
+                }}
+            >
+                Facebook Login
+            </Button>
+        </div>
     );
 }
 
