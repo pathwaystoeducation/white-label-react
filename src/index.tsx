@@ -1,21 +1,24 @@
 import { Amy } from "@amy-app/js-sdk";
 import { AppPage, createAmyTheme } from "@amy-app/react-components";
+import { useAmyObserver } from "@amy-app/react-components/dist/src/tools/amyHooks";
 import { Button, CssBaseline, TextField } from "@material-ui/core";
 import { makeStyles } from '@material-ui/core/styles';
+import firebase from "firebase";
 import "firebase/auth";
 import "firebase/database";
 import "firebase/firestore";
-import firebase from "firebase";
 import React, { useState } from "react";
 import ReactDOM from "react-dom";
+import { FacebookLoginButton, GoogleLoginButton } from "react-social-login-buttons";
 import "./index.css";
+import "./pathways.css";
 import reportWebVitals from "./reportWebVitals";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
     display: 'flex',
     flexDirection: 'column',
-    height: '198px',
+    // height: '198px',
     justifyContent: 'space-around',
   },
 }));
@@ -55,7 +58,7 @@ async function signInAndGetToken(signInPromise) {
     await Amy.get().signInViaToken({ token });
     console.log("Amy is logged in. Wait for the magic to happen!");
   }
-  catch(error) {
+  catch (error) {
     alert(`Amy sign in error: ${error.message}`);
   }
 }
@@ -68,116 +71,166 @@ if (window.location.hostname === 'localhost') {
 }
 
 const theme = createAmyTheme({
-    palette: {
-        primary: {
-            main: "#002566",
-        },
-        secondary: {
-            main: "#808080",
-        },
+  typography: {
+    fontFamily: ["Roboto", "sans-serif"].join(","),
+  },
+  login: {
+    background: "rgb(255, 255, 255)",
+    // background: "rgb(255, 255, 254)",
+    hidePoweredBy: true,
+  },
+  palette: {
+    action: {
+      active: "rgb(255, 255, 255)"
+      // active: "rgb(1,1,1)",
     },
-    shape: {
-        borderRadius: 5,
+    primary: {
+      main: "rgba(0,0,0,.6)"
+      // main: "rgb(255, 255, 255)",
     },
-    row: {
-        border: "2px solid",
-        borderLeft: "8px solid",
-        padding: "0px 15px",
+    secondary: {
+      main: "#808080",
     },
-    instructionRow: {
-        color: "#59A6FF",
-    },
-    feedbackRow: {
-        neutralColor: "#59A6FF",
-        positiveColor: "#59A6FF",
-        negativeColor: "#59A6FF",
-    },
-    optionRow: {
-        marginLeft: 10,
-        correctColor: "#FC9854",
-        incorrectColor: "#B3B3B3",
-    },
-    stickyInstruction: true,
-    stickyOption: true,
+  },
+  shape: {
+    borderRadius: 5,
+  },
+  row: {
+    border: "2px solid",
+    borderLeft: "8px solid",
+    padding: "0px 15px",
+  },
+  instructionRow: {
+    backgroundColor: "#59A6FF",
+  },
+  feedbackRow: {
+    neutralBackgroundColor: "#59A6FF",
+    positiveBackgroundColor: "#59A6FF",
+    negativeBackgroundColor: "#59A6FF",
+  },
+  optionRow: {
+    marginLeft: 10,
+    correctBackgroundColor: "#FC9854",
+    incorrectBackgroundColor: "#B3B3B3",
+  },
+  stickyInstruction: true,
+  stickyOption: true,
 
-    props: {
-        MuiGrid: {
-            spacing: 1,
-        },
+  props: {
+    MuiGrid: {
+      spacing: 1,
     },
+  },
+
+  // taken from node_modules/@amy-app/react-components/dist/src/AmyThemeProvider.js
+  // overrides: {
+  //   MuiButton: {
+  //     outlinedPrimary: {
+  //       border: "1px solid #171B2D",
+  //       color: "#171B2D",
+  //       "&:hover": {
+  //         backgroundColor: "#171B2D",
+  //         color: "#FFFFFF",
+  //       },
+  //     },
+  //     outlinedSecondary: {
+  //       border: "none",
+  //       color: "#007131",
+  //       "&:hover": {
+  //         border: "none",
+  //         backgroundColor: "#FFFFFF",
+  //         color: "#007131",
+  //       },
+  //     },
+  //     outlined: {
+  //       padding: "5px 25px",
+  //       borderRadius: "30px",
+  //       border: "1px solid #171B2D",
+  //       color: "#171B2D",
+  //       textTransform: "none",
+  //       "&:hover": {
+  //         backgroundColor: "#171B2D",
+  //         color: "#FFFFFF",
+  //       },
+  //     },
+  //     text: {
+  //       padding: "6px 30px",
+  //     },
+  //   },
+  // }
 });
 
+// logoSrc={"/logo.png"}/
+
 ReactDOM.render(
-    <React.StrictMode>
-        <CssBaseline />
-        <AppPage
-            logoSrc={"/logo.png"}
-            login={<AuthSpace/>}
-            theme={theme}
-        />
-    </React.StrictMode>,
-    document.getElementById("root"),
+  <React.StrictMode>
+    <CssBaseline />
+    <AppPageWrapper />
+  </React.StrictMode>,
+  document.getElementById("root"),
 );
 
-
+function AppPageWrapper() {
+  const { user } = useAmyObserver();
+  return (
+    <div className={user ? 'logged-in' : 'logged-out'}>
+      <img src="/logo.png" alt="logo" className="logo" />
+      <AppPage
+        login={<AuthSpace />}
+        theme={theme}
+      />
+    </div>
+  )
+}
 
 function AuthSpace() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-    const classes = useStyles();
+  const classes = useStyles();
 
-    return (
-        <div className={classes.paper}>
-            <TextField
-                value={email}
-                placeholder="email"
-                onChange={(e) => {
-                    setEmail(e.target.value);
-                }}
-            />
-            <TextField
-                value={password}
-                placeholder="password"
-                onChange={(e) => {
-                    setPassword(e.target.value);
-                }}
-            />
-            <Button
-                variant="contained"
-                color="primary"
-                type="submit"
-                disabled={!email || !password}
-                onClick={() => {
-                  signInAndGetToken(auth.signInWithEmailAndPassword(email, password));
-                }}
-            >
-                Login
-            </Button>
+  return (
+    <div className={`${classes.paper} sign-in-form`}>
+      <TextField
+        variant="outlined"
+        label="Email"
+        value={email}
+        onChange={(e) => {
+          setEmail(e.target.value);
+        }}
+      />
+      <TextField
+        value={password}
+        placeholder="password"
+        onChange={(e) => {
+          setPassword(e.target.value);
+        }}
+      />
+      <Button
+        variant="contained"
+        color="primary"
+        type="submit"
+        className="green"
+        onClick={() => {
+          signInAndGetToken(auth.signInWithEmailAndPassword(email, password));
+        }}
+      >
+        Sign In
+      </Button>
 
-            <Button
-                variant="contained"
-                color="secondary"
-                type="button"
-                onClick={() => {
-                  signInAndGetToken(auth.signInWithPopup(googleProvider));
-                }}
-            >
-                Google Sign In
-            </Button>
+      <GoogleLoginButton
+        onClick={() => {
+          signInAndGetToken(auth.signInWithPopup(googleProvider));
+        }}
+      />
 
-            <Button
-                variant="contained"
-                color="secondary"
-                type="button"
-                onClick={() => {
-                  signInAndGetToken(auth.signInWithPopup(facebookProvider));
-                }}
-            >
-                Facebook Login
-            </Button>
-        </div>
-    );
+      <FacebookLoginButton
+        onClick={() => {
+          signInAndGetToken(auth.signInWithPopup(facebookProvider));
+        }}
+      />
+    </div>
+  );
 }
 
 // If you want to start measuring performance in your app, pass a function
