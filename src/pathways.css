@@ -41,3 +41,11 @@ button.MuiButtonBase-root.green:hover,
   margin: 10px 0!important;
   width: 100%!important;
 }
+
+img.logo {
+  z-index: 3000;
+}
+
+.MuiAppBar-positionFixed .MuiToolbar-root {
+  margin-left: 160px;
+}

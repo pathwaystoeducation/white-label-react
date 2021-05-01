@@ -18,7 +18,6 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     display: 'flex',
     flexDirection: 'column',
-    // height: '198px',
     justifyContent: 'space-around',
   },
 }));
@@ -73,6 +72,15 @@ if (window.location.hostname === 'localhost') {
 const theme = createAmyTheme({
   typography: {
     fontFamily: ["Roboto", "sans-serif"].join(","),
+  },
+  backdrop: {
+    background: '#f8f8f8',
+    fadeBackground: true,
+    useDarkText: true,
+  },
+  header: {
+    background: '#fff',
+    useDarkText: true,
   },
   login: {
     background: "rgb(255, 255, 255)",
