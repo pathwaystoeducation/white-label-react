@@ -121,46 +121,7 @@ const theme = createAmyTheme({
       spacing: 1,
     },
   },
-
-  // taken from node_modules/@amy-app/react-components/dist/src/AmyThemeProvider.js
-  // overrides: {
-  //   MuiButton: {
-  //     outlinedPrimary: {
-  //       border: "1px solid #171B2D",
-  //       color: "#171B2D",
-  //       "&:hover": {
-  //         backgroundColor: "#171B2D",
-  //         color: "#FFFFFF",
-  //       },
-  //     },
-  //     outlinedSecondary: {
-  //       border: "none",
-  //       color: "#007131",
-  //       "&:hover": {
-  //         border: "none",
-  //         backgroundColor: "#FFFFFF",
-  //         color: "#007131",
-  //       },
-  //     },
-  //     outlined: {
-  //       padding: "5px 25px",
-  //       borderRadius: "30px",
-  //       border: "1px solid #171B2D",
-  //       color: "#171B2D",
-  //       textTransform: "none",
-  //       "&:hover": {
-  //         backgroundColor: "#171B2D",
-  //         color: "#FFFFFF",
-  //       },
-  //     },
-  //     text: {
-  //       padding: "6px 30px",
-  //     },
-  //   },
-  // }
 });
-
-// logoSrc={"/logo.png"}/
 
 ReactDOM.render(
   <React.StrictMode>
